@@ -4,4 +4,3 @@ seaborn
 cvxpy
 scipy
 cvxopt
-mosek

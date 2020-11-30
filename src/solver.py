@@ -52,13 +52,13 @@ def define_problem(A_value, r_value):
 
     return(prob)
 
-def solver(n_family, r, N_experiments):
+def solver(N_experiments, n_family, r = 1):
     """
     """
     distances, status = [], []
     for _ in range(N_experiments):
         problem = define_problem(random_initialization(n_family), r)
-        problem.solve(solver = cp.CVXOPT, kktsolver = "robust", verbose = True)
+        problem.solve(solver = cp.CVXOPT, kktsolver = "robust")
         distances.append(problem.value)
         status.append(problem.status)
     return(distances, status)

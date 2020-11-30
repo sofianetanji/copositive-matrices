@@ -12,11 +12,12 @@ Part of the following project http://www-ljk.imag.fr/membres/Roland.Hildebrand/e
 
 # Libraries
 import matplotlib.pyplot as plt
+import matplotlib.style as style
 import seaborn as sns
 import numpy as np
 
 # Visualization settings
-sns.set(font="Franklin Gothic Book",
+sns.set(font="DejaVu Sans",
         rc={
  "axes.axisbelow": False,
  "axes.edgecolor": "lightgrey",
@@ -38,17 +39,16 @@ sns.set(font="Franklin Gothic Book",
  "ytick.direction": "out",
  "ytick.left": False,
  "ytick.right": False})
-sns.set_context("notebook", rc={"font.size":16,
-                                "axes.titlesize":20,
-                                "axes.labelsize":18})
 
-def plotting(array):
+style.use("ggplot")
+
+def plot(array, n_family):
     """
     """
     array1 = np.copy(array)
     array1 = array1[array1 > -1e5]
-    plt.figure(figsize = (30, 5))
+    plt.figure(figsize = (12, 12))
     plt.subplot(111)
-    print(array)
     plt.hist(array1)
-    plt.savefig('../fig/figure.png', dpi = 140)
+    plt.xlabel("Distance to the COP6 cone", fontsize=16)
+    plt.savefig('../fig/histogram-family-{}.png'.format(n_family), dpi = 140)

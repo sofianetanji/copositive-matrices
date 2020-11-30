@@ -11,9 +11,14 @@ Part of the following project http://www-ljk.imag.fr/membres/Roland.Hildebrand/e
 """
 
 # Libraries
-from visualization import plotting
+from visualization import plot
 from solver import solver
+from multiprocessing import Pool, cpu_count
 
-distances, status = solver(2, 1, 100)
+num_workers = cpu_count()
+pool = Pool(num_workers)
 
-plotting(distances)
+distances, status = solver(100, 3)
+print(distances)
+print(status)
+plot(distances, 3)
