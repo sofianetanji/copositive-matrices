@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8; mode: python -*-
 """
-Implementation of the semidefinite program to check the exactness of Parillo relaxations.
+Visualization module to plot pretty histograms
 
-Part of the following project http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf from a MSIAM course.
+Part of the following project:
+http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf from a MSIAM course.
 
 - *Date:* Friday, November the 27th, 2020
 - *Author:* Sofiane Tanji, for the MSIAM Master
@@ -43,7 +44,8 @@ sns.set(font="DejaVu Sans",
 style.use("ggplot")
 
 def plot(array, n_family):
-    """
+    """Plots a clean histogram of array
+    giving it a title depending on n_family
     """
     array1 = np.copy(array)
     array1 = array1[array1 > -1e5]

@@ -3,62 +3,62 @@
 """
 Implementation of the semidefinite program to check the exactness of Parillo relaxations.
 
-Part of the following project http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf from a MSIAM course.
+Part of the following project:
+http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf from a MSIAM course.
 
 - *Date:* Friday, November the 27th, 2020
 - *Author:* Sofiane Tanji, for the MSIAM Master
 - *Licence:* GNU GPL3 Licence
 """
 
-
-# Constants
-DIMENSION = 6
-
 # Libraries
 import numpy as np
 import cvxpy as cp
 from scipy.special import comb
-from parrilo import CreationMatrixMoments, CreationParriloPolynomial
+from parrilo import creation_matrix_moments, creation_parrilo_polynomial
 from randomgen import random_initialization
 
-def define_problem(A_value, r_value):
-    """
+def define_problem(a_value, r_value):
+    """Define the SDP problem using CVXPY
     """
     # Define constants
-    d = int(comb(7 + r_value, 2 + r_value))
-    I = np.eye(d)
-    M = np.array(CreationMatrixMoments(2+r_value))
-    
+    dim_c = int(comb(7 + r_value, 2 + r_value))
+    moments = np.array(creation_matrix_moments(2+r_value))
+
     # Define input parameters
-    A = cp.Parameter((6, 6), value = A_value)
-    r = cp.Parameter(value = r_value)
-    
+    a_parameter = cp.Parameter((6, 6), value = a_value)
+    r_parameter = cp.Parameter(value = r_value)
+
     # Define variables
-    C = cp.Variable((d, d), PSD = True)
-    t = cp.Variable()
+    c_var = cp.Variable((dim_c, dim_c), PSD = True)
+    t_var = cp.Variable()
 
     # Define constraints
-    LHS = np.array(CreationParriloPolynomial(A.value, r.value))
-    RHS = C.flatten() @ M.T
-    constraint1 = [C - t * I >> 0]
-    constraint2 = [r == l for r,l in zip(RHS,LHS)]
+    lefthandside = np.array(creation_parrilo_polynomial(a_parameter.value, r_parameter.value))
+    righthandside = c_var.flatten() @ moments.T
+    constraint1 = [c_var - t_var * np.eye(dim_c) >> 0]
+    constraint2 = [i == j for i,j in zip(righthandside,lefthandside)]
     constraints = constraint1 + constraint2
 
     # Define objective
-    obj = cp.Maximize(t)
+    obj = cp.Maximize(t_var)
 
     # Define problem
     prob = cp.Problem(obj, constraints)
 
-    return(prob)
+    return prob, c_var
 
-def solver(N_experiments, n_family, r = 1):
+def solver(n_experiments, n_family, verb, r_value = 1):
     """
+    Solves n_experiments instances of the SDP for
+    - a matrix belonging to the n_family
+    - a Parrilo value r_value
     """
-    distances, status = [], []
-    for _ in range(N_experiments):
-        problem = define_problem(random_initialization(n_family), r)
-        problem.solve(solver = cp.CVXOPT, kktsolver = "robust")
+    distances, status, variables = [], [], []
+    for _ in range(n_experiments):
+        problem, var = define_problem(random_initialization(n_family), r_value)
+        problem.solve(solver = cp.CVXOPT, kktsolver = "robust", verbose = verb)
         distances.append(problem.value)
+        variables.append(var.value)
         status.append(problem.status)
-    return(distances, status)
+    return(distances, status, variables)
