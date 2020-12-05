@@ -1,0 +1,1 @@
+1. In the 2020 paper with Afonin, there are 23 families, why are we focused on only 5 of them ?

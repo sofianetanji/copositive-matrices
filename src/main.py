@@ -17,9 +17,8 @@ import csv
 from argparse import ArgumentParser
 from multiprocessing import Pool, cpu_count
 import numpy as np
-from visualization import plot
+from visualization import plot_hist, plot_matrix, random2dprojection
 from solver import solver
-
 num_workers = cpu_count()
 pool = Pool(num_workers)
 
@@ -30,17 +29,19 @@ def main(parameters):
     - verbose
     """
     if parameters.n_family != 0:
-        distances, status, variables = solver(parameters.nb_instances,
+        distances, status, variables, solved, nonsolved = solver(parameters.nb_instances,
         parameters.n_family, parameters.verbose)
         np.savez(os.path.join(parameters.save_dir), distances, status, variables)
-        plot(distances, parameters.n_family)
+        # plot_hist(distances, parameters.n_family)
+        # plot_matrix(variables[0])
+        random2dprojection(solved, nonsolved, parameters.n_family)
     else:
         distances, variables = [], []
         for i in [1, 2, 3, 4, 5]:
-            distance, _, variable = solver(parameters.nb_instances, i, parameters.verbose)
+            distance, _, variable, _, _ = solver(parameters.nb_instances, i, parameters.verbose)
             distances.append(distance)
             variables.append(variable)
-            plot(distance, i)
+            plot_hist(distance, i)
         np.savez(os.path.join(parameters.save_dir), distances, variables)
 
 if __name__ == '__main__':

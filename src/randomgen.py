@@ -120,4 +120,4 @@ def random_initialization(n_family):
             [cos(p_2 + p_4), -cos(p_4), cos(p_5 + p_7), cos(p_6 + p_7), 1, -cos(p_7)],
             [cos(p_1 + p_5), cos(p_3 + p_6), -cos(p_5), -cos(p_6), -cos(p_7), 1]])
 
-    return instance
+    return((p_1, p_2), instance)

@@ -1,4 +1,4 @@
-nb_instances,50
+nb_instances,20
 n_family,3
 verbose,False
 save_dir,../outputs/

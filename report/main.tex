@@ -112,7 +112,9 @@
 \newcommand\qedsp{\hfill\(\square\)}
 
 \newcommand{\argmax}[1]{\underset{#1} {\operatorname{arg\,max}}}
-
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{ragged2e}
 \usepackage{afterpage}
@@ -123,7 +125,8 @@
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \large
 % ------------------------------------------------------------------------------
-\title{\vspace*{10pt}\Huge{\textbf{Exactness of SOS relaxations in copositive programming}}\\ \vspace*{15pt} \Large{Research Project Report - "Modelling seminar project" course} }
+\title{\vspace*{10pt}\Huge{\textbf{Exactness of SOS relaxations in copositive programming}}\\
+\vspace*{15pt} \Large{Research Project Report - "Modelling seminar project" course} }
 \thispagestyle{plain}
 \date{}
 \author{}
@@ -172,7 +175,9 @@
 
 % ------------------------------------------------------------------------------
 \hr{}
-
+\blfootnote{ 
+	If needed, see on-line at \url{https://github.com/sofianetanji/copositive-matrices} for additional resources (slides, code, figures, complete bibliography etc), open-sourced under the \href{https://www.gnu.org/licenses/gpl-3.0.html}{GNU GPL v3 License}.
+	}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Table of Contents - One page ?!
 \newpage
@@ -207,11 +212,7 @@
 
 % ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
-\paragraph{Outline:} 
-% TODO : repeat the outline but with much more details.
-Our contribution corresponds to sections 2, 3 and 4.\\
-\hr{}
-\section{Presentation}
+\section{Presentation and motivation}
 \label{sec:presentation}
 Here are detailed the main results on copositive matrices and its applications along with common approximations of the copositive cone.
 % ------------------------------------------------------------------------------
@@ -226,7 +227,13 @@ Here are detailed the main results on copositive matrices and its applications a
 % TODO : Explain what are Parrilo cones first.
 % TOOD : Detail the results linked to the copositive cone.
 % TODO : Use figures maybe for n = 3
+\subsection{Quick overview of the goals of this project}
+% TODO : explain it in like 2-3 paragraphs of each 3 lines maybe. 
+% with the implications of the work etc
 The next sections aim to prove that every matrix $A \in \mathcal{COP}^6$ with unit diagonal is in $\mathcal{K}_6^1$.
+% ------------------------------------------------------------------------------
+% \hr{} if newpage gets unnecessary
+\newpage
 % ------------------------------------------------------------------------------
 \section{Numerical certificate of exactness}
 \label{sec:computation}
@@ -235,9 +242,39 @@ We detail how we obtained the special copositive matrices and how we checked exi
 % ------------------------------------------------------------------------------
 \subsection{Generation of random instances}
 \label{sub:generation}
+We focused on generating random instances of the extreme rays of $\mathcal{COP}^6$. This is motivated by \cite{afonin2020extreme} which provides
+a complete classification of the extreme rays and by the strong result that an inner approximation of a convex cone is exact if and only if
+it contains all extreme rays. Namely, checking the exactness of Parrilo relaxations on the extreme rays is equivalent to checking it on the whole $\mathcal{COP}^6$ cone.
+\begin{figure}[h!]
+	\begin{framed}
+		1. Pick a family of special matrices.\\
+		2. Generate random angles $(\phi_i)_i$.\\
+		3. Generate the special matrix $A$ parametrized by the angles.
+	\end{framed}
+	\caption{\textsc{Random generation of a special matrix} (randomgen.py)}
+	\label{algo:random-instances}
+\end{figure}
+
+The family of special matrices are all defined in \cite{afonin2020extreme} 
+and corresponds to stratums $13.1$, $13.2$, $16$, $17$, $19$.
+
+The number of operations (``\emph{flops}'') necessary for this algorithm is about :
+\begin{equation}
+	\label{eq:complexity_randomgen}
+	T_{\mathrm{RandomSpecialInstance}}(n_\phi) =  n_\phi^2 + 7 n_\phi + 48 = \mathcal{O}(n_\phi^2).
+\end{equation}
+where $n_\phi$ is the number of angles needed to parametrize one special matrix, namely $5$, $6$ or $7$ in our case.
+We provide in appendix the analytical expression of the parametrization of each special matrix.
+The corresponding code is in \texttt{src/randomgen.py}.
 % ------------------------------------------------------------------------------
 \subsection{Certify a matrix is in the Parrilo cone}
 \label{sub:parrilo-certificate}
+% Talk about the construction of the constraints (mainly what's in parrilo.py)
+% Talk about Lasserre etc.
+If each special matrix $A$ built using the previous algorithm in Figure \ref{algo:random-instances}
+belongs to a Parrilo cone, we will have the numerical certificate we are searching for.
+Therefore, if for a given $r$, we are able to check if a given matrix belongs to the Parrilo cone $\mathcal{K}_6^r$,
+we will have our numerical certificate. We explain below how this was implemented.
 % ------------------------------------------------------------------------------
 \subsection{Implementation of the semi-definite program and results}
 \label{sub:sdp}
@@ -282,18 +319,23 @@ We now present the main contribution of our project, an analytical certificate o
 \label{sub:final-result}
 % ------------------------------------------------------------------------------
 \subsection{Questions still not answered}
+Hopefully, we'll be able to delete this subsection \smiley{}
 \label{sub:questions}
 % ------------------------------------------------------------------------------
 \section{Conclusion}
 % ------------------------------------------------------------------------------
 \appendix
+% TODO : Add the too long computations of section 4
+% TODO : Add some figures if we think we've put enough on sections 1, 2, 3.
+\section{Special matrices }
+% Just rewrite the formulas (see 2020 paper), the constraints on the angles and the code.
 % ------------------------------------------------------------------------------
 \newpage
 \normalsize
 % ------------------------------------------------------------------------------
 \section{Introduction}
 \label{sec:introduction}
-\todo{Write a propoer introduction, usefulness of copositive matrices, what do
+\todo{Write a proper introduction, usefulness of copositive matrices, what do
 they represent, what are we going to do, the layout of the report}
 % ------------------------------------------------------------------------------
 \subsection{Copositive matrices}

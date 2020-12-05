@@ -18,6 +18,8 @@
 ### Main dates (TODO)
 - [X] End of October: understand the project at hand;
 - [X] November : implement the SDP;
+- [ ] December : make the code share-able and re-usable
+- [ ] December : Start the first sections of the report
 - [ ] December - January : sketch a proof;
 - [ ] End of January : Finalize the project (code + report + slides).
 
