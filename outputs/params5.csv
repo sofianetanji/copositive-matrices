@@ -1,0 +1,4 @@
+nb_instances,50
+n_family,5
+verbose,False
+save_dir,../outputs/

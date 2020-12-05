@@ -67,7 +67,7 @@ def random_initialization(n_family):
         angp = np.msort(np.random.random(8,))
         angp = (np.append(angp, 1) - np.insert(angp, 0, 0)) @ array_x
         p_1, p_2, p_3 = np.pi * angp[0], np.pi * angp[1], np.pi * angp[2]
-        p_4, p_5, p_6, p_7 = np.pi * angp[3], np.pi * angp[4], np.pi * angp[5], np.py * angp[6]
+        p_4, p_5, p_6, p_7 = np.pi * angp[3], np.pi * angp[4], np.pi * angp[5], np.pi * angp[6]
         instance = np.array(
             [[1, -cos(p_2), -cos(p_1), cos(p_2 + p_3), cos(p_2 + p_4), cos(p_1 + p_5)],
         [-cos(p_2), 1, cos(p_1 + p_2), -cos(p_3), -cos(p_4), cos(p_3 + p_6)],
@@ -90,10 +90,10 @@ def random_initialization(n_family):
         c_8min = - (cos(p_7) * sin(p_1) + cos(p_9) * sin(p_5) ) / sin(p_1 + p_5)
         c_8max = - np.max([cos(p_5 + p_7), cos(p_1 + p_9)])
         p_8 = np.arccos(c_8min + np.random.random() * (c_8max - c_8min))
-        w_1 = np.sqrt(sin(p_1) ^ 2 * sin(p_8) ^ 2 - (cos(p_9) + cos(p_1) * cos(p_8)) ^ 2)
-        w_5 = np.sqrt(sin(p_5) ^ 2 * sin(p_8) ^ 2 - (cos(p_7) + cos(p_5) * cos(p_8)) ^ 2)
+        w_1 = np.sqrt((sin(p_1) ** 2) * (sin(p_8) ** 2) - (cos(p_9) + cos(p_1) * cos(p_8)) ** 2)
+        w_5 = (np.sqrt(sin(p_5) ** 2) * (sin(p_8) ** 2) - (cos(p_7) + cos(p_5) * cos(p_8)) ** 2)
         a24 = (cos(p_1) * cos(p_5) + cos(p_1) * cos(p_7) * cos(p_8) + cos(p_5) * cos(p_8)
-         * cos(p_9) + cos(p_7) * cos(p_9) - w_1 * w_5 ) / sin(p_8) ^ 2
+         * cos(p_9) + cos(p_7) * cos(p_9) - w_1 * w_5 ) / (sin(p_8) ** 2)
         instance = np.array(
         [[1, - cos(p_4), cos(p_4 + p_5), cos(p_2 + p_3), -cos(p_3), cos(p_3 + p_6)],
         [-cos(p_4), 1, -cos(p_5), a24, cos(p_3 + p_4), -cos(p_7)],

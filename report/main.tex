@@ -1,0 +1,526 @@
+\documentclass[onecolumn,11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{cmap}                  % fix search and cut-and-paste in Acrobat
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0pt}
+
+\usepackage[plainpages=false,pdfcenterwindow=true,
+    pdftoolbar=false,pdfmenubar=false,
+    pdftitle={},
+    pdfauthor={},
+    linkcolor=black,citecolor=black,filecolor=black,urlcolor=black]{hyperref}
+
+\usepackage[margin=1.20in,top=1.35in,bottom=1.35in]{geometry}
+\usepackage{enumerate}
+\usepackage{amsmath, amsfonts, amsthm, amssymb, amsbsy, bbm, latexsym}
+\allowdisplaybreaks
+\usepackage[numbers]{natbib}
+\bibliographystyle{unsrtnat}
+\usepackage{tikz}
+\usepackage{todonotes}
+\usetikzlibrary{arrows,positioning,shapes}
+
+\usepackage{color}                 % use colors with, e.g., \textcolor{red}{text}
+\definecolor{darkgray}{rgb}{0.15,0.15,0.15}   % rgb(38, 38, 38)
+\definecolor{lightgray}{rgb}{0.94,0.94,0.94}  % rgb(239, 239, 239)
+\definecolor{lightlightgray}{rgb}{0.97,0.97,0.97}  % rgb(247, 247, 247)
+\definecolor{darkred}{rgb}{0.80,0.00,0.00}    % rgb(204, 0, 0)
+\definecolor{darkgreen}{rgb}{0.00,0.70,0.00}    % rgb(0,178,0)
+\definecolor{darkblue}{rgb}{0.00,0.00,0.70}    % rgb(0,0,178)
+
+\usepackage{graphicx}              % to include figures
+\graphicspath{{fig/}}              % directory in which figures are stored
+\usepackage[labelfont=bf]{caption}               % add a caption to figures
+\usepackage{subcaption}            % and allow multi figures
+\usepackage{multicol}              % multi column environment
+\usepackage{float}                 % allow more control to float and figures positions
+\usepackage{framed}                % \framed command to frame an important part
+\usepackage{palatino}              % Use the Palatino font % XXX remove if it is ugly ?
+\usepackage{enumitem}              % For \begin{enumerate}, switch back to itemize if it fails
+\usepackage{wasysym}               % Symbol font http://stackoverflow.com/a/190321/5889533, for \frownie
+\usepackage{marvosym}               % Amother symbol font, for \Heart
+\usepackage{lipsum}
+% Custom package for the better footnote symbols, http://ctan.org/pkg/footmisc
+\usepackage[bottom]{footmisc}
+% \usepackage[perpage,para,symbol*]{footmisc}
+
+\theoremstyle{plain}  % Plain style for theorem, defn, lemma, proposition, corollary
+\newtheorem{theorem}{Theorem}[section]
+% \newtheorem{proof}{Proof}  % Already defined by amsthm
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{attempt}[theorem]{Attempt}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{property}[theorem]{Property}
+\newtheorem{properties}[theorem]{Properties}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}  % Remark style for remark, example, examples
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{warning}[theorem]{\textcolor{red}{Warning}}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{examples}[theorem]{Examples}
+
+
+\definecolor{theorembar}{rgb}{0.00,0.95,0.00}      % Define a new color rgb(0,242,0)
+\definecolor{defnbar}{rgb}{0.00,0.00,0.95}         % Define a new color rgb(0,0,242)
+\definecolor{propositionbar}{rgb}{0.58,0.00,1.00}  % Define a new color rgb(147,0,255)
+\definecolor{corollarybar}{rgb}{0.00,0.95,0.95}    % Define a new color rgb(0,242,242)
+\definecolor{lemmabar}{rgb}{1.00,0.00,0.78}        % Define a new color rgb(255,0,198)
+\definecolor{warningbar}{rgb}{0.90,0.00,0.00}      % Define a new color rgb(229,0,0)
+\definecolor{propertybar}{rgb}{1.00,1.00,0.00}  % Define a new color rgb(255,255,0)
+% \definecolor{examplebar}{rgb}{0.00,0.00,0.00}      % Define a new color rgb(0,0,0)
+\definecolor{remarkbar}{rgb}{1.00,0.53,0.00}       % Define a new color rgb(255,135,0)
+
+% Tips from http://tex.stackexchange.com/a/205133/97964
+\usepackage[nameinlink]{cleveref}
+
+\usepackage{listings}
+\lstset{numbers=left, numberstyle=\tiny,frame=single}
+
+\usepackage{lastpage,fancyhdr}     % customize the headers and footers
+\pagestyle{fancy}
+    \setlength{\headheight}{14pt}
+    \renewcommand{\headrulewidth}{0.2pt}
+    \renewcommand{\footrulewidth}{0.2pt}
+    \lhead{\emph{Modelling Seminar and Projects}}
+    \rhead{\emph{2020-2021}}
+    \lfoot{Exactness of Parillo relaxations}
+    \cfoot{$\thepage/\pageref{LastPage}$}
+    \rfoot{Abdellaziz, Ghimire, Laskina, Tanji}
+
+% Change the name if the table of content from ``Contents'' to ``Outline''
+\renewcommand{\contentsname}{\hfill{} Outline \hfill{}}  % XXX Put the title centered in the page!
+% XXX Change the font size of the title ``Abstract'' for the abstract
+\usepackage{abstract}  % http://www.latex-community.org/forum/viewtopic.php?f=4&t=18791
+\renewcommand{\abstractnamefont}{\normalfont\Large\bfseries}
+% \renewcommand{\abstractname}{Introduction}
+
+\providecommand*{\hr}[1][class-arg]{%
+    \hspace*{\fill}\hrulefill\hspace*{\fill}
+    \vskip 0.65\baselineskip
+}
+
+% Custom commands:
+\newcommand*{\defeq}{\stackrel{\text{def}}{=}}
+
+\newcommand{\eqv}{\Leftrightarrow}
+\newcommand{\bm}{\boldsymbol}
+
+\newcommand\cqfd{\hfill\(\blacksquare\)}
+\newcommand\qedsp{\hfill\(\square\)}
+
+\newcommand{\argmax}[1]{\underset{#1} {\operatorname{arg\,max}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{ragged2e}
+\usepackage{afterpage}
+\newcommand{\blankpage}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\large
+% ------------------------------------------------------------------------------
+\title{\vspace*{10pt}\Huge{\textbf{Exactness of SOS relaxations in copositive programming}}\\ \vspace*{15pt} \Large{Research Project Report - "Modelling seminar project" course} }
+\thispagestyle{plain}
+\date{}
+\author{}
+\maketitle
+% ------------------------------------------------------------------------------
+\hr{}
+% ------------------------------------------------------------------------------
+% Author(s)
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\begin{Large}
+\begin{center}
+		\href{mailto:Mohamed-Amine.Abdellaziz@grenoble-inp.org}{\textbf{Mohamed Amine~Abdellaziz}}\\
+		\textcolor{blue}{\texttt{{mohamed-amine}{.}{abdellaziz}{{@}}{grenoble-inp}{.}{org}}}\\
+		\href{mailto:suraj.ghimire@grenoble-inp.org}{\textbf{Suraj~Ghimire}}\\
+    	\textcolor{blue}{\texttt{{suraj}{.}{ghimire}{{@}}{grenoble-inp}{.}{org}}}\\
+		\href{mailto:laskina.as@phystech.edu}{\textbf{Anna~Laskina}}\\
+    	\textcolor{blue}{\texttt{{laskina}{.}{as}{{@}}{phystech}{.}{edu}}}\\
+    	\href{mailto:sofiane.tanji@grenoble-inp.org}{\textbf{Sofiane~Tanji}}\\
+		\textcolor{blue}{\texttt{{sofiane}{.}{tanji}{{@}}{grenoble-inp}{.}{org}}}\\
+\end{center}
+\end{Large}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\setcounter{footnote}{0}  %% XXX
+% ------------------------------------------------------------------------------
+\hr{}
+
+% ------------------------------------------------------------------------------
+% A small abstract of what is done in the paper
+\begin{normalsize}  % XXX ?
+\begin{abstract}
+    \begin{normalsize}  % XXX ?
+		\justify
+		For our research project, we studied the Parrilo relaxations
+		for certifying copositivy of a given matrix of size $6 \times 6$. In
+		this small project report, we first present quickly the framework of Parrilo relaxations
+		with its hypotheses and the usual notations, along with a sum-up of the sums of squares literature.
+		Our main contribution is to certify the exactness of Parrilo relaxations on unit diagonal copositive matrices
+		for $n = 6$. We first present the framework of Parrilo relaxations quickly while recapitulating notations.
+		In section 2, we present the computational approach taken to check the exactness of Parrilo relaxations and the results obtained.
+		Then, we present the structure of the sums-of-squares decomposition obtained numerically and explain it in section 3.
+		In section 4, we prove the 1-Parrilo cone to be a tractable approximation of the unit-diagonal copositive cone for $n = 6$.
+    \end{normalsize}  % XXX ?
+\end{abstract}
+\end{normalsize}  % XXX ?
+
+
+% ------------------------------------------------------------------------------
+\hr{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents - One page ?!
+\newpage
+\normalsize % XXX ?
+
+\begin{large} % XXX ?
+    \tableofcontents
+\end{large} % XXX ?
+
+\normalsize % XXX ?
+% ------------------------------------------------------------------------------
+\hr{}  % Horizontal line, like <hr> in HTML
+% XXX remove if it is ugly or take too much space
+
+\vfill{}
+% ------------------------------------------------------------------------------
+% About the report
+\begin{center}
+    \begin{large}
+        % FIXED He was not really my advisor but allright...
+        \textbf{Project Advisor:} \href{http://www-ljk.imag.fr/membres/Roland.Hildebrand/}{Roland Hildebrand} (\href{http://dao-ljk.imag.fr/}{DAO team}, \href{http://www-ljk.imag.fr/}{Laboratoire Jean Kuntzmann}) \\
+        \textbf{Course:}
+        \emph{\href{https://chamilo.grenoble-inp.fr/courses/ENSIMAGWMM9AM10/index.php}{``Modeling seminar and projects''}}, by \href{http://www-ljk.imag.fr/membres/Emmanuel.Maitre/doku.php}{Emmanuel Maître}, in $2020$, \\
+        \textbf{Master $2$ program: } \href{https://msiam.imag.fr/doku.php}{Master of Science in Industrial and Applied Mathematics (MSIAM)}
+        at \href{https://ensimag.grenoble-inp.fr/}{Grenoble INP - Ensimag}. \\
+    \end{large}
+\end{center}
+% ------------------------------------------------------------------------------
+\newpage
+
+\blankpage
+
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+\paragraph{Outline:} 
+% TODO : repeat the outline but with much more details.
+Our contribution corresponds to sections 2, 3 and 4.\\
+\hr{}
+\section{Presentation}
+\label{sec:presentation}
+Here are detailed the main results on copositive matrices and its applications along with common approximations of the copositive cone.
+% ------------------------------------------------------------------------------
+\subsection{The copositive cone}
+\label{sub:copositive}
+% TODO : talk about copositivity
+% TODO : Talk about the common approximation C = S + N
+% TODO : Talk about convexity structure for n = 6 and the 5 families.
+% ------------------------------------------------------------------------------
+\subsection{Parrilo cones and sums of squares}
+\label{sub:parrilo}
+% TODO : Explain what are Parrilo cones first.
+% TOOD : Detail the results linked to the copositive cone.
+% TODO : Use figures maybe for n = 3
+The next sections aim to prove that every matrix $A \in \mathcal{COP}^6$ with unit diagonal is in $\mathcal{K}_6^1$.
+% ------------------------------------------------------------------------------
+\section{Numerical certificate of exactness}
+\label{sec:computation}
+This section presents the computational approach taken to have a numerical certificate.
+We detail how we obtained the special copositive matrices and how we checked existence of a sums of squares decomposition.
+% ------------------------------------------------------------------------------
+\subsection{Generation of random instances}
+\label{sub:generation}
+% ------------------------------------------------------------------------------
+\subsection{Certify a matrix is in the Parrilo cone}
+\label{sub:parrilo-certificate}
+% ------------------------------------------------------------------------------
+\subsection{Implementation of the semi-definite program and results}
+\label{sub:sdp}
+\subsection{Solving the SDP : issues tackled}
+\label{sub:solving-issues}
+We quickly present the issues faced to solve the SDP.
+% TODO : talk about making kkt-solver robust.
+% TODO : talk about the random 2d projection clustered.
+% ------------------------------------------------------------------------------
+\section{Structure of the SOS decomposition}
+\label{sec:sos-structure}
+In this section, we detail the structure of the SOS decompositions obtained numerically for each family,
+discuss about the monomials participating to the decomposition for each family and what this tells us on
+the structure of the problem.
+% ------------------------------------------------------------------------------
+\subsection{Family 1}
+\label{sub:fam-1}
+% ------------------------------------------------------------------------------
+\subsection{Family 2}
+\label{sub:fam-2}
+% ------------------------------------------------------------------------------
+\subsection{Family 3}
+\label{sub:fam-3}
+% ------------------------------------------------------------------------------
+\subsection{Family 4}
+\label{sub:fam-4}
+% ------------------------------------------------------------------------------
+\subsection{Family 5}
+\label{sub:fam-5}
+% ------------------------------------------------------------------------------
+\section{Analytical certificate of exactness}
+\label{sec:analytical}
+We now present the main contribution of our project, an analytical certificate of exactness of Parrilo relaxations in the case $n = 6$.
+% ------------------------------------------------------------------------------
+\subsection{SOS decomposition as a function of angles}
+\label{sub:sos-angles}
+% ------------------------------------------------------------------------------
+\subsection{SOS decomposition and the kernels of the special matrices}
+\label{sub:sos-kernel}
+% ------------------------------------------------------------------------------
+\subsection{Certificate of exactness for each family}
+\label{sub:final-result}
+% ------------------------------------------------------------------------------
+\subsection{Questions still not answered}
+\label{sub:questions}
+% ------------------------------------------------------------------------------
+\section{Conclusion}
+% ------------------------------------------------------------------------------
+\appendix
+% ------------------------------------------------------------------------------
+\newpage
+\normalsize
+% ------------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+\todo{Write a propoer introduction, usefulness of copositive matrices, what do
+they represent, what are we going to do, the layout of the report}
+% ------------------------------------------------------------------------------
+\subsection{Copositive matrices}
+
+\todo{fill the blank spaces with comments to create a smooth flow}
+\begin{defn}
+	A matrix $A \in \mathcal{M}_{n \times n} \left( \mathbb{R} \right)$ is a \textbf{copositive} matrix if
+	$\forall x \in \mathbb{R}_+^n, x^T A x \ge 0$. The set of copositive matrices
+	\[ \mathcal{COP}^n = \left\{ A \in \mathcal{M}_{n \times n} \mathbb{R} |
+	\text{ $A$ is
+		copositive}\right\} \]
+	 is called the \textbf{copositive cone}.
+\end{defn}
+
+Let us define 
+
+\begin{align*}
+	\mathcal{S}_+^n & : \text{ the set of positive semi-definite matrices} \\
+	\mathcal{N}_n  & : \text{ the set of element-wise non-negative symmetric matrices} \\
+	\label{}
+\end{align*}
+
+\todo{Put the references}
+\begin{theorem}[Dianonda]
+	For $n \le 4$ 
+	\[
+		 \mathcal{S}_+^n + \mathcal{N}_n =  \mathcal{COP}^n
+	\]
+\end{theorem}
+
+\begin{theorem}[A. Horn]
+	For $n \ge 5$
+	\[
+		 \mathcal{S}_+^n + \mathcal{N}_n \subsetneq \mathcal{COP}^n
+	\]
+\end{theorem}
+
+\begin{theorem}
+	If $A \in \mathcal{COP}^5$ and $A$ has a unit diagonal then $A \in
+	\mathcal{K}_5^1$.
+\end{theorem}
+
+The copositive cone $\mathcal{COP}^n$ is invariant under the action of the
+multiplicative group $\mathbb{R}^n_{++}, A \mapsto D A D$ where $D = diag(d), d
+\in \mathbb{R}^n_{++}$. Thus $A \in \mathcal{COP}^n$ with a non unit positive diagonal can be scaled to a copositive matrix with unit diagonal by setting
+$d = diag A$ and applying 
+\[
+	\tilde{A} = diag\left( d^{-\frac{1}{2}} \right) A diag\left( d^{-\frac{1}{2}}
+	\right).
+\]
+
+Consequently for $n = 5$ a work-around strategy to check if a matrix $A$ is copositive would
+be to scale it to have its diagonal a unit vector and then check if it belongs
+to $\mathcal{K}_5^1$. A matrix $A$ belongs to the $r$-th Parrilo cone $\mathcal{K}_n^r$ if the
+polynomial of degree $2r + 4$ 
+
+\[
+	\left( \sum_{k = 1}^n x^r_k  \right)^r \sum_{K, l = 1}^n A_{k,l} x^2_k x^2_l 
+\]
+
+can be represented as a SOS of polynomials of degree $2 + r$.
+
+The goal of the project is to check the exactness of the Parrilo relaxations on
+unit diagonal copositive matrices in the $n = 6$ case.
+
+\subsection{Sum of Squares}
+\label{sos}
+\label{sub:definition}
+Let $p: \mathbb{R}^n \rightarrow   \mathbb{R} $ be  any polynomial of degree $2d$. If $p(x)
+\geq 0 , \forall x \in \mathbb{R}^n $,  the question is whether can the
+polynomial be represented as a sum of squares (SOS), i.e. can be decomposed as 
+\[  p(x) =  \sum_{n=1}^m q^{2}_j(x)\] 
+where $q_j(x)$ is a homogeneous polynomial of degree $d$, $i = 1,\ldots,m$. 
+
+Let $\mathbf{x} = \left\{ x^\alpha \right\}_{ |\alpha| = d }$ the sequence of all
+monomials of degree $d$,
+
+\[ x^\alpha = \prod_{i = 1}^n x_i^{\alpha_i} \]
+
+with $\alpha = \left(
+	\alpha_i \right)_{i = 1,\ldots,d} \in \mathbb{N}^n$  and $| \alpha | =
+	\sum_{i = 1}^n \alpha_i $ is the degree . 
+\begin{proposition}
+	A polynomial $p(x)$ is a SOS if and only if there exists a PSD matrix $C$ such
+	that $p(x) = \mathbf{x}^T C \mathbf{x}$.
+\end{proposition}
+	
+	\begin{proof}
+		We have 
+		\begin{equation}
+			q_j(x) = c_j^T \mathbf{x}  = \sum_{|\alpha|= d} c_{j, \alpha }^T x^{\alpha} 
+		\end{equation}
+		where $c_j = \left\{ c_{j, \alpha} \right\}_{|\alpha| = d}$ is the vector of
+		coefficients of $q_j$. The component $c_j^T \mathbf{x}$ is a scalar so 
+
+		\begin{equation}\left( c_j^T \mathbf{x}  \right)^T = \mathbf{x}^T c_j = c_j^T \mathbf{x}\end{equation}
+
+		and as a result
+
+		\begin{align*}	\sum_{j = 1}^m q_j (x)^2  & = \sum_{j = 1}^m \left( c_j^T \mathbf{x} 
+			\right)^2   = \sum_{j = 1}^m c_j^T \mathbf{x} c_j^T \mathbf{x} \\ & = \sum_{j = 1}^m \mathbf{x}^T c_j
+			c_j^T \mathbf{x}   =  \mathbf{x}^T \left( \sum_{j = 1}^m c_j c_j^T  \right)\mathbf{x} \\
+			& = \mathbf{x}^T C \mathbf{x} & \\
+		\end{align*}
+
+		where $C = \sum_{j = 1}^m c_j c_j^T $ is a PSD matrix. 
+
+		On the other hand any semi-definite matrix $C \succeq 0$ can be written as
+		the sum $C = \sum_{j = 1}^m c_j c_j^T$ and equivalently $\mathbf{x}^T C
+		\mathbf{x}$ is a SOS.
+	\end{proof}
+
+	Verifying that $p(x)$ is a SOS is equivalent to solving the SDP 
+
+	\begin{equation}
+		\min_{t, C} t : p(x) = \mathbf{x}^T C \mathbf{x} \text{ and } C + tI
+		\succeq 0
+		\label{}
+	\end{equation}
+
+	If we write
+	
+	\[
+		p(x) = \sum_{|\gamma| = 2d} a_\gamma x^\gamma
+	\]
+	
+	then the equality constraint $p(x) = \mathbf{x}^T C \mathbf{x}$ can be divided into
+	simpler constraints on the entries of $C$ by comparing the coeficients at the
+	powers of $x$ on both sides, i.e.
+
+	\[
+		a_\gamma = \sum_{\alpha + \beta = \gamma} = C_{\alpha, \beta}
+	\]
+
+	\begin{example}
+		We take a polynomial $p$ of degree $2$ 
+	
+		\begin{equation*}
+			p (x) = 9x_1^2 + 4 x_2^2 + 12 x_1 x_2  
+		\end{equation*}
+
+that can be written as the square of a homogeneous matrix $q(x) =  3 x_1 + 2 x_2 $
+
+\begin{equation*}
+	p(x) = \left( q(x) \right)^2.
+\end{equation*}
+
+We shall find the matrix $ C = \begin{pmatrix}c_{11} & c_{12} \\ c_{21} & c_{22}
+\end{pmatrix} $ such that 
+
+\begin{equation*}
+	p(x) = \mathbf{x}^T C \mathbf{x}
+\end{equation*}
+
+We distribute 
+
+\begin{align*}
+	\mathbf{x}^T C \mathbf{x} = & \left( x_1, x_2 \right) \begin{pmatrix}c_{11} & c_{12} \\ c_{21} & c_{22}
+	\end{pmatrix} \begin{pmatrix}x_{1} \\ x_{2} \end{pmatrix} \\
+	& = \left( c_{11} x_1 + c_{21} x_2, c_{12} x_1 + c_{22} x_2 \right)
+	\begin{pmatrix}x_{1} \\ x_{2} \end{pmatrix}  \\
+	& = c_{11} x_1^2 + \left( c_{21} + c_{12} \right) x_1 x_2 + c_{22} x_2^2
+\end{align*}
+
+The component $c_{11}$ corresponds to $x_1$ the first component of both $\mathbf{x}$
+and $\mathbf{x}^T$ so we can note $c_{11} = c_{(1, 0),(1, 0)}$. Also $c_{12}$ corresponds to the second component of $\mathbf{x}$ and to the
+first component of $\mathbf{x}^T$ so we can write it as $c_{12} = c_{(1,
+0),(0,1)}$. Equivalently we get $c_{21} = c_{(0, 1),(1, 0)} $ and $ c_{22} = c_{(0, 1),(0, 1)}$. So 
+
+\[
+	\mathbf{x}^T C \mathbf{x} = c_{(1, 0),(1, 0)} x_1^2 + \left( c_{(0, 1),(1, 0)} + c_{(1,
+	0),(0,1)} \right) x_1 x_2 + c_{22} = c_{(0, 1),(0, 1)} x_2^2
+\]
+
+We get the system
+
+\begin{equation*}
+	\left\{ \begin{aligned}
+		a_{(2,0)} & = \sum_{\alpha + \beta = (2, 0)} C_{\alpha \beta} = c_{(1, 0),(1,
+		0)} = 9\\
+		a_{(1,1)} & = \sum_{\alpha + \beta = (1, 1)} C_{\alpha \beta} = c_{(1, 0),(0, 1)}
+		+ c_{(0, 1),(1, 0)} = 4\\
+		a_{(0,2)} & = \sum_{\alpha + \beta = (0, 2)} C_{\alpha \beta} = c_{(0, 1),(0,
+		1)} = 12\\
+	\end{aligned} \right.
+\end{equation*}
+
+And a solution would be
+
+\begin{equation*}
+	C = \begin{pmatrix}9 & 6 \\ 6 & 4 \end{pmatrix} 
+\end{equation*}
+
+\end{example}
+
+\subsection{Sum of Squares}
+
+Let p be temporary quadratic function  $p(x,y,z)$
+\[ 
+p(x,y,z) = x^4 + y^4 + z^4 - 2x^2yz -  - 2xy^2z -  - 2xyz^2 
+\]
+\[
+X= ( x^2, y^2, z^2, yz, xz, xy)^T 
+\]
+
+\textbf{please complete this part}
+
+
+\begin{align}
+\max_{t, c} t: C - tI \geq 0 \\
+& a_r = \sum_{\alpha + \beta= r} c_{\alpha  \beta} \forall r
+\end{align}
+
+If $t \geq 0 $ then p is SOS representable
+if $t<0$ then p is not SOS
+
+$A \in S^n $. A is copositive if $X^T A X \geq 0 \forall X \in \mathbb{R}_{+}^n$ 
+
+Question Is A Co-positive?
+\[
+\text{A copositive } \Leftrightarrow P_A =\sum_{i, j = 1}^n A_{ij}X_i^2 X_j^2  \geq 0 \]
+% ------------------------------------------------------------------------------
+\section{Semi-definite programming}
+\subsection{Generation of instances of the special matrices}
+\label{sub:generation}
+% ------------------------------------------------------------------------------
+\newpage
+\nocite{afonin2020extreme}
+\bibliography{references.bib}
+\end{document}

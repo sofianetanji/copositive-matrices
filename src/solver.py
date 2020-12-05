@@ -57,8 +57,12 @@ def solver(n_experiments, n_family, verb, r_value = 1):
     distances, status, variables = [], [], []
     for _ in range(n_experiments):
         problem, var = define_problem(random_initialization(n_family), r_value)
-        problem.solve(solver = cp.CVXOPT, kktsolver = "robust", verbose = verb)
-        distances.append(problem.value)
-        variables.append(var.value)
-        status.append(problem.status)
+        # problem.solve(solver = cp.CVXOPT, kktsolver = "robust", verbose = verb)
+        try:
+            problem.solve(solver = cp.MOSEK, verbose = verb)
+            distances.append(problem.value)
+            variables.append(var.value)
+            status.append(problem.status)
+        except ValueError:
+            pass
     return(distances, status, variables)

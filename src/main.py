@@ -29,15 +29,19 @@ def main(parameters):
     - n_family
     - verbose
     """
-    distances, status, variables = solver(parameters.nb_instances,
-    parameters.n_family, parameters.verbose)
-
-    np.save(os.path.join(parameters.save_dir), 'array-{}'.format(parameters.n_family), distances)
-    np.save(os.path.join(parameters.save_dir), 'status-{}'.format(parameters.n_family), status)
-    np.save(os.path.join(parameters.save_dir), 'variables-{}'.format(parameters.n_family),
-    variables)
-
-    plot(distances, parameters.n_family)
+    if parameters.n_family != 0:
+        distances, status, variables = solver(parameters.nb_instances,
+        parameters.n_family, parameters.verbose)
+        np.savez(os.path.join(parameters.save_dir), distances, status, variables)
+        plot(distances, parameters.n_family)
+    else:
+        distances, variables = [], []
+        for i in [1, 2, 3, 4, 5]:
+            distance, _, variable = solver(parameters.nb_instances, i, parameters.verbose)
+            distances.append(distance)
+            variables.append(variable)
+            plot(distance, i)
+        np.savez(os.path.join(parameters.save_dir), distances, variables)
 
 if __name__ == '__main__':
 
@@ -46,13 +50,13 @@ if __name__ == '__main__':
     parser.add_argument('--nb_instances', type = int, default = 100)
     parser.add_argument('--n_family', type = int, default = 1)
     parser.add_argument('--verbose', type = bool, default = False)
-    parser.add_argument('--save_dir', type = str, default = '.')
+    parser.add_argument('--save_dir', type = str, default = '../outputs/')
 
     params = parser.parse_args()
 
     if not os.path.exists(params.save_dir):
         os.makedirs(params.save_dir)
-    csv_file = os.path.join(params.save_dir, 'params.csv')
+    csv_file = os.path.join(params.save_dir, 'params{}.csv'.format(params.n_family))
     with open(csv_file, 'w') as csvfile:
         writer = csv.writer(csvfile)
         for key, value in params.__dict__.items():

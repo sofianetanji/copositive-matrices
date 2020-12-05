@@ -1,0 +1,27 @@
+\contentsline {paragraph}{Outline:}{3}{section*.2}%
+\contentsline {section}{\numberline {1}Presentation}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}The copositive cone}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Parrilo cones and sums of squares}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Numerical certificate of exactness}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Generation of random instances}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Certify a matrix is in the Parrilo cone}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Implementation of the semi-definite program and results}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Solving the SDP : issues tackled}{3}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Structure of the SOS decomposition}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Family 1}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Family 2}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Family 3}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Family 4}{3}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Family 5}{3}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Analytical certificate of exactness}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}SOS decomposition as a function of angles}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}SOS decomposition and the kernels of the special matrices}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Certificate of exactness for each family}{4}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Questions still not answered}{4}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Conclusion}{4}{section.5}%
+\contentsline {section}{\numberline {A}Introduction}{5}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Copositive matrices}{5}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Sum of Squares}{6}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Sum of Squares}{8}{subsection.A.3}%
+\contentsline {section}{\numberline {B}Semi-definite programming}{8}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Generation of instances of the special matrices}{8}{subsection.B.1}%
