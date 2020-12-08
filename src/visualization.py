@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8; mode: python -*-
 """
-Visualization module to plot pretty histograms.
+Visualization module to plot pretty histograms and more.
 Plot the SOS decomposition built
 
 Part of the following project:
@@ -31,7 +31,7 @@ def plot_hist(array, n_family):
     plt.subplot(111)
     plt.hist(array1)
     plt.xlabel("Distance to the COP6 cone", fontsize=16)
-    # plt.savefig('../fig/histogram-family-{}.png'.format(n_family), dpi = 140)
+    plt.savefig('../fig/histogram-family-{}.png'.format(n_family), dpi = 140)
     plt.show()
 
 def blockdiag(mat):
@@ -43,10 +43,24 @@ def blockdiag(mat):
     mat = csr_matrix(mat)
     graph = nx.from_scipy_sparse_matrix(mat)
     rcm = reverse_cuthill_mckee_ordering(graph)
-    blockdiag = nx.to_scipy_sparse_matrix(graph, nodelist=list(rcm), format='csr').toarray()
+    blockd = nx.to_scipy_sparse_matrix(graph, nodelist=list(rcm), format='csr').toarray()
     liste = list(reverse_cuthill_mckee_ordering(graph))
     print(liste)
-    return blockdiag
+    return blockd
+
+def structure_bd(mat):
+    """
+    input : matrix that is block-diagonalizable
+    output : list of the (i,j) such that mat[i,j] != 0
+    """
+    blockd = blockdiag(mat)
+    dim1, dim2 = blockd.shape
+    output = []
+    for i in range(dim1):
+        for j in range(dim2):
+            if blockd[i][j] != 0:
+                output.append((i, j))
+    return output
 
 def plot_matrix(mat, n_family):
     """
@@ -66,8 +80,10 @@ def plot_matrix(mat, n_family):
     ax2.title.set_text('Re-ordered matrix')
     fig.colorbar(im1, ax = ax1)
     fig.colorbar(im2, ax = ax2)
-    # plt.savefig('../fig/structured-family-{}.png'.format(n_family), dpi = 140)
+    plt.savefig('../fig/structured-family-{}.png'.format(n_family), dpi = 140)
     plt.show()
+    indexes = structure_bd(mat)
+    print(indexes, len(indexes))
 
 def random2dprojection(solved, nsolved, n_family):
     """
@@ -85,5 +101,5 @@ def random2dprojection(solved, nsolved, n_family):
     s = 30, label = "solved")
     plt.title("Random 2D projection")
     axis.legend(loc=2)
-    # plt.savefig('../fig/random-2dproj-family{}.png'.format(n_family), dpi = 140)
+    plt.savefig('../fig/random-2dproj-family{}.png'.format(n_family), dpi = 140)
     plt.show()
