@@ -79,6 +79,29 @@ def plotting(indexes):
     fig.colorbar(im1, ax = ax1)
     fig.colorbar(im2, ax = ax2)
     plt.show()
+    
+def CreationMatrixСoncordance(power):
+    '''
+    power: int 
+
+    This function calculates the product of h*h^T, where h is a vector of all
+    monomials of dimension 6 and degree power
+    '''
+    size = int(comb(7 + power, power))
+    Monomials = CreationMonomialVectors(power, 1)
+    return [[tuple(Monomials[i][k]+Monomials[j][k] for k in range(6)) for i in range(size)] for j in range(size)] 
+
+def TupleVisualization(monomial):
+    '''
+    monomial: 6-element tuple
+
+    This function converts a tuple (a1,a2,a3,a4,a5,a6,) to a string of the following form:
+    x_1^a1 x_2^a2 x_3^a3 x_4^a4 x_5^a5 x_6^a6
+
+    '''
+    return 'x_'+' x_'.join([str(i+1)+'^'+str(monomial[i]) for i in range(6) if monomial[i] != 0])
+
+
 print("Checking it with matplotlib")
 plotting(fam1)
 print("---------------------------------------------------------------")
