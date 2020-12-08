@@ -12,6 +12,7 @@ http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf fro
 """
 
 # Libraries
+import numpy as np
 from math import factorial
 from numpy import prod
 
@@ -108,9 +109,10 @@ def creation_parrilo_polynomial(matrix, r_value):
      additional_polynomial_creation(r_value), 4 + 2 * r_value)
     return [dict_coeffs.get(monomial,0.0) for monomial in monomials]
 
-def creation_matrix_moments(max_power, dim=6):
+def creation_matrix_m(max_power, dim=6):
     """
-    This function finds the matrix moments as stated by Lassere.
+    This function enforces the linear constraints
+    on entries of the SOS representation
     """
     size_small = int(factorial(dim + max_power -1) / (factorial(max_power) * factorial(dim - 1)))
     size_big = int(factorial(dim + 2 * max_power -1) /

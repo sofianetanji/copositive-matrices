@@ -1,0 +1,5 @@
+<list_reverseiterator object at 0x7f34984f6550>
+<list_reverseiterator object at 0x7f34a545aaf0>
+<list_reverseiterator object at 0x7f34acbbf280>
+<list_reverseiterator object at 0x7f34e3e3f100>
+<list_reverseiterator object at 0x7f34eb8c4cd0>

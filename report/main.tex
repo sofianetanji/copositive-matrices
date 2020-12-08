@@ -21,7 +21,8 @@
 \usepackage{tikz}
 \usepackage{todonotes}
 \usetikzlibrary{arrows,positioning,shapes}
-
+\usepackage{caption}
+\DeclareCaptionType{equ}[][]
 \usepackage{color}                 % use colors with, e.g., \textcolor{red}{text}
 \definecolor{darkgray}{rgb}{0.15,0.15,0.15}   % rgb(38, 38, 38)
 \definecolor{lightgray}{rgb}{0.94,0.94,0.94}  % rgb(239, 239, 239)
@@ -45,7 +46,7 @@
 % Custom package for the better footnote symbols, http://ctan.org/pkg/footmisc
 \usepackage[bottom]{footmisc}
 % \usepackage[perpage,para,symbol*]{footmisc}
-
+\usepackage{physics}
 \theoremstyle{plain}  % Plain style for theorem, defn, lemma, proposition, corollary
 \newtheorem{theorem}{Theorem}[section]
 % \newtheorem{proof}{Proof}  % Already defined by amsthm
@@ -232,8 +233,8 @@ Here are detailed the main results on copositive matrices and its applications a
 % with the implications of the work etc
 The next sections aim to prove that every matrix $A \in \mathcal{COP}^6$ with unit diagonal is in $\mathcal{K}_6^1$.
 % ------------------------------------------------------------------------------
-% \hr{} if newpage gets unnecessary
-\newpage
+\hr{} % if newpage gets unnecessary
+% \newpage 
 % ------------------------------------------------------------------------------
 \section{Numerical certificate of exactness}
 \label{sec:computation}
@@ -242,7 +243,7 @@ We detail how we obtained the special copositive matrices and how we checked exi
 % ------------------------------------------------------------------------------
 \subsection{Generation of random instances}
 \label{sub:generation}
-We focused on generating random instances of the extreme rays of $\mathcal{COP}^6$. This is motivated by \cite{afonin2020extreme} which provides
+We first focus on generating random instances of the extreme rays of $\mathcal{COP}^6$. This is first motivated by \cite{afonin2020extreme} which provides
 a complete classification of the extreme rays and by the strong result that an inner approximation of a convex cone is exact if and only if
 it contains all extreme rays. Namely, checking the exactness of Parrilo relaxations on the extreme rays is equivalent to checking it on the whole $\mathcal{COP}^6$ cone.
 \begin{figure}[h!]
@@ -266,18 +267,79 @@ The number of operations (``\emph{flops}'') necessary for this algorithm is abou
 where $n_\phi$ is the number of angles needed to parametrize one special matrix, namely $5$, $6$ or $7$ in our case.
 We provide in appendix the analytical expression of the parametrization of each special matrix.
 The corresponding code is in \texttt{src/randomgen.py}.
+% TODO : Provide it in appendix.
 % ------------------------------------------------------------------------------
 \subsection{Certify a matrix is in the Parrilo cone}
 \label{sub:parrilo-certificate}
 % Talk about the construction of the constraints (mainly what's in parrilo.py)
 % Talk about Lasserre etc.
-If each special matrix $A$ built using the previous algorithm in Figure \ref{algo:random-instances}
+If each special matrix $A$, built using the previous algorithm in Figure \ref{algo:random-instances},
 belongs to a Parrilo cone, we will have the numerical certificate we are searching for.
 Therefore, if for a given $r$, we are able to check if a given matrix belongs to the Parrilo cone $\mathcal{K}_6^r$,
-we will have our numerical certificate. We explain below how this was implemented.
+we will have our numerical proof. We explain below how this was implemented.\\
+The $r$-th Parrilo condition says that the product polynomial below has a sums of squares representation.
+\begin{equation}
+	\label{eq:parrilo-polynomial}
+	p_{r, A}(x) = \left(\sum_{k = 1}^n x_k^2\right)^r \cdot \sum_{k, l = 1}^n A_{kl} x_k^2 x_l^2
+\end{equation}
+Our approach is then as such, for given $r$ and $A$ :
+
+\begin{figure}[h!]
+	\begin{framed}
+		1. Construct the Parrilo polynomial.\\
+		2. Implement a generic SOS representation, depending on a variable $C$.\\
+		3. Try to build $C$ through a semi-definite program.
+	\end{framed}
+	\caption{\textsc{Parrilo polynomial and SOS representability} (parrilo.py)}
+	\label{algo:parrilo}
+\end{figure}
+
+We now discuss the process used for stage 1 and 2. For stage 1, we build separately the coefficients for expressions:
+\begin{equation}
+	\left(\sum_{k = 1}^n x_k^2\right)^r
+\end{equation}
+using function $\texttt{additional\_polynomial\_creation(r)}$ and:
+\begin{equation}
+	\sum_{k, l = 1}^n A_{kl} x_k^2 x_l^2
+\end{equation}
+using function $\texttt{matrix\_polynomial\_creation(A)}$. The final coefficients are obtained with the method
+$\texttt{multiplication\_of\_polynomials(poly1, poly2)}$ which computes the coefficients of the product of two polynomials.\\
+We now detail the implementation of stage 2 as it was trickier and made use of notions we did not discuss yet.\\
+We want to build a SOS representation of the form $\vb{x}^T C \vb{x}$ where $C$ is a positive semi-definite matrix. As stated in section \ref{sec:presentation}, comparing the coefficients of the polynomial with this representation gives the following linear equality constraints on the entries of C :
+\begin{equation}
+    a_{\gamma} = \sum\limits_{\alpha + \beta = \gamma}C_{\alpha\beta}
+\end{equation}
+for each multi-index $\gamma$ of modulus the degree of the polynomial. To compute it numerically, we first need to re-write it as such :
+\begin{align*}
+    a_{\gamma} = \sum\limits_{\alpha + \beta = \gamma}C_{\alpha\beta} & = \sum\limits_{\alpha,\beta} \textbf{1}_{\alpha + \beta = \gamma} \cdot C_{\alpha\beta} \\
+    & = \langle v_{\gamma},\widetilde{C}\rangle \\
+    & = \langle M,\widetilde{C}\rangle.
+\end{align*}
+where $v_{\gamma}=\{ \textbf{1}_{\alpha + \beta = \gamma}\}_{\alpha\beta}$, the matrix $M$ has rows $v_{\gamma}$ for each $\gamma$ and $\widetilde{C}$ corresponds to matrix C reshaped as a vector. Therefore, these constraints can be re-written as as dot product between $M$ and $C$. \\ Finally, computing the SOS representation is equivalent to enforcing the constraint above so we only need to build the coefficients of matrix $M$. \\ This is done using function $\texttt{creation\_matrix\_m(max\_power)}$.
+Both stages are implemented in file \texttt{src/parrilo.py} while stage 3 is implemented in
+\texttt{src/solver.py} using $\texttt{cvxpy}$ library.
 % ------------------------------------------------------------------------------
 \subsection{Implementation of the semi-definite program and results}
 \label{sub:sdp}
+We now detail the implementation of the semi-definite program (i.e. stage 3) and interpret the results obtained. \\
+In order to verify whether the polynomial $p_{r, A}$ is a Sums Of Squares, we have to check the existence of a positive semi-definite matrix $C$ such that:
+\begin{equation}
+	p_{r, A}(x) = \vb{x}^T  C \vb{x}.
+\end{equation}
+A way to solve the feasibility problem above is therefore to solve the associated semi-definite program (SDP):
+\begin{equation}
+	\begin{aligned}
+		& \underset{t, C}{\text{minimize}}
+		& & \mathrm{t} \\
+		& \text{subject to}
+		& & p_{r, A}(x) = \vb{x}^T  C \vb{x}, \\
+		&&& C + t I \succeq 0. 
+	\end{aligned}
+\end{equation}
+If the solver returns $t = 0$, this would mean that $C \succeq 0$ is on the frontier of the positive semi-definite cone.
+If it returns a non-positive value then this would also mean that the polynomial p is representable as a Sum Of Squares
+ (precisely, we would be inside the cone) and finally, if it returns a positive value, then $t$ is the distance from
+ the polynomial to the cone of SOS polynomials in a certain direction.
 \subsection{Solving the SDP : issues tackled}
 \label{sub:solving-issues}
 We quickly present the issues faced to solve the SDP.
@@ -343,7 +405,7 @@ they represent, what are we going to do, the layout of the report}
 \todo{fill the blank spaces with comments to create a smooth flow}
 \begin{defn}
 	A matrix $A \in \mathcal{M}_{n \times n} \left( \mathbb{R} \right)$ is a \textbf{copositive} matrix if
-	$\forall x \in \mathbb{R}_+^n, x^T A x \ge 0$. The set of copositive matrices
+	$\forall x \in \mathbb{R}_+^n, \vb{x}^T A \vb{x} \ge 0$. The set of copositive matrices
 	\[ \mathcal{COP}^n = \left\{ A \in \mathcal{M}_{n \times n} \mathbb{R} |
 	\text{ $A$ is
 		copositive}\right\} \]
@@ -544,6 +606,7 @@ X= ( x^2, y^2, z^2, yz, xz, xy)^T
 \textbf{please complete this part}
 
 
+
 \begin{align}
 \max_{t, c} t: C - tI \geq 0 \\
 & a_r = \sum_{\alpha + \beta= r} c_{\alpha  \beta} \forall r
@@ -557,10 +620,6 @@ $A \in S^n $. A is copositive if $X^T A X \geq 0 \forall X \in \mathbb{R}_{+}^n$
 Question Is A Co-positive?
 \[
 \text{A copositive } \Leftrightarrow P_A =\sum_{i, j = 1}^n A_{ij}X_i^2 X_j^2  \geq 0 \]
-% ------------------------------------------------------------------------------
-\section{Semi-definite programming}
-\subsection{Generation of instances of the special matrices}
-\label{sub:generation}
 % ------------------------------------------------------------------------------
 \newpage
 \nocite{afonin2020extreme}

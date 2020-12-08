@@ -26,22 +26,29 @@ def main(parameters):
     """Parameters are:
     - nb_instances
     - n_family
-    - verbose
+    - verb
     """
     if parameters.n_family != 0:
         distances, status, variables, solved, nonsolved = solver(parameters.nb_instances,
-        parameters.n_family, parameters.verbose)
+        parameters.n_family, parameters.verb)
         np.savez(os.path.join(parameters.save_dir), distances, status, variables)
         # plot_hist(distances, parameters.n_family)
-        # plot_matrix(variables[0])
+        sos = next(item for item in variables if item is not None)
+        plot_matrix(sos, parameters.n_family)
         random2dprojection(solved, nonsolved, parameters.n_family)
     else:
         distances, variables = [], []
         for i in [1, 2, 3, 4, 5]:
-            distance, _, variable, _, _ = solver(parameters.nb_instances, i, parameters.verbose)
+            distance, _, variable, solved, nonsolved = solver(parameters.nb_instances,
+             i, parameters.verb)
+            # PLOTTING
+            sos = next(item for item in variable if item is not None)
+            plot_matrix(sos, i)
+            random2dprojection(solved, nonsolved, i)
+            plot_hist(distance, i)
+            # SAVING AS NPZ
             distances.append(distance)
             variables.append(variable)
-            plot_hist(distance, i)
         np.savez(os.path.join(parameters.save_dir), distances, variables)
 
 if __name__ == '__main__':
@@ -50,7 +57,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--nb_instances', type = int, default = 100)
     parser.add_argument('--n_family', type = int, default = 1)
-    parser.add_argument('--verbose', type = bool, default = False)
+    parser.add_argument('--verb', type = bool, default = False)
     parser.add_argument('--save_dir', type = str, default = '../outputs/')
 
     params = parser.parse_args()
