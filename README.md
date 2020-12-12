@@ -18,16 +18,17 @@
 ### Main dates (TODO)
 - [X] End of October: understand the project at hand;
 - [X] November : implement the SDP;
-- [X] December : make the code share-able and re-usable
-- [X] December : Start the first sections of the report
-- [ ] December - January : sketch a proof;
+- [X] December : make the code share-able and re-usable;
+- [X] December : Start the first sections of the report;
+- [X] December - January : sketch a proof;
+- [ ] December - January : finalize the proof;
 - [ ] End of January : Finalize the project (code + report + slides).
 
 ----
 
 ## Project reports
 ### [Final report](./report/) (TODO)
-Here [is the report](not-yet) (*in English*).
+Here [is the report](./report/main.pdf) (*in English*).
 
 ### [Final presentation](./slides/) with slides (TODO)
 Here [are the slides](not-yet) (*in English*).
