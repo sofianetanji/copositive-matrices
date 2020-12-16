@@ -16,7 +16,7 @@ import time
 import numpy as np
 import sympy as sp
 from sympy import symbols, Matrix, sin
-from sympy.solvers.solveset import linsolve
+# from sympy.solvers.solveset import linsolve
 from monomials import POSITIONS
 from parrilo import creation_monomial_vectors
 
@@ -43,12 +43,19 @@ def build_empty_c():
         matrix[i][j] = symbols('c_{}_{}'.format(i, j))
     return matrix
 
-c_matrix = build_empty_c()
-c_symbs = []
-for i in range(56):
-    for j in range(56):
-        if c_matrix[i][j] is not None:
-            c_symbs.append(c_matrix[i][j])
+def build_csymbs():
+    '''
+    build array of C symbols
+    '''
+    c_matrix = build_empty_c()
+    c_symbs = []
+    for i in range(56):
+        for j in range(56):
+            if c_matrix[i][j] is not None:
+                c_symbs.append(c_matrix[i][j])
+    return c_symbs
+
+csymbs = build_csymbs()
 
 def build_bigroot(root):
     """
@@ -83,8 +90,8 @@ def set_constraints(bigroot):
 
 cstrnts = []
 bigroots = []
-for root in roots_13:
-    cstrnts += set_constraints(build_bigroot(root))
+for single_root in roots_13:
+    cstrnts += set_constraints(build_bigroot(single_root))
 cstrnts = [c for c in cstrnts if c != 0]
 print("All constraints on C for one root, families 13.1 and 13.2")
 for cons in cstrnts:
@@ -94,6 +101,6 @@ print("---------------------------------------------------------------")
 temps = time.time()
 # Solve system : using the current constraints take too much time ( > 6 hours, did not complete)
 # We need to make pre-processing
-# linsolve(cstrnts, tuple(c_symbs))
+# linsolve(cstrnts, tuple(csymbs))
 elapsed = time.time() - temps
 print("Time for solving the full system: %.5f sec" % elapsed)
