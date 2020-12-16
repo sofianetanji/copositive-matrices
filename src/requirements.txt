@@ -6,3 +6,4 @@ scipy
 cvxopt
 mosek
 networkx
+sympy

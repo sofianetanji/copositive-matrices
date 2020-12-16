@@ -79,7 +79,7 @@ def random_initialization(n_family):
 
     if n_family == 4: # nondegenerate stratum 19
         angp = np.msort(np.random.random(5,))
-        angp = angp - np.insert(angp[1:], 0, 0)
+        angp = angp - np.insert(angp[:-1], 0, 0, axis = 0)
         p_1, p_2, p_3 = np.pi * angp[0], np.pi * angp[1], np.pi * angp[2]
         p_4, p_5 = np.pi * angp[3], np.pi * angp[4]
         p_6 = p_2 + np.random.random() * (np.pi + p_1 - p_2 - p_3 - p_4 + p_5) / 2

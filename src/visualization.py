@@ -38,7 +38,7 @@ def blockdiag(mat):
     """
     Bandwidth reduction problem
     http://ciprian-zavoianu.blogspot.com/2009/01/project-bandwidth-reduction.html
-    This increases barely block-diagonality of the matrix.
+    This gives block-diagonality of the matrix.
     """
     mat = csr_matrix(mat)
     graph = nx.from_scipy_sparse_matrix(mat)

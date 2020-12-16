@@ -12,7 +12,6 @@ http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf fro
 """
 
 # Libraries
-import numpy as np
 from math import factorial
 from numpy import prod
 

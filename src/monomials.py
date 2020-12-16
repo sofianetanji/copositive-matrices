@@ -13,6 +13,8 @@ http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf fro
 # Libraries
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.special import comb
+from parrilo import creation_monomial_vectors
 
 def fill_ind(indexes):
     """
@@ -40,7 +42,9 @@ print("---------------------------------------------------------------")
 fam1 = fill_ind(fam1)
 fam2, fam3, fam4, fam5 = fam1, fam1, fam1, fam1
 
-perm = [48, 47, 46, 45, 43, 42, 41, 39, 38, 36, 55, 49, 44, 40, 35, 37, 28, 27, 26, 24, 23, 21, 29, 25, 22, 54, 34, 20, 14, 13, 11, 53, 19, 15, 12, 33, 10, 5, 52, 18, 9, 6, 32, 4, 31, 51, 17, 8, 1, 3, 30, 50, 16, 7, 0, 2]
+perm = [48, 47, 46, 45, 43, 42, 41, 39, 38, 36, 55, 49, 44, 40, 35, 37,
+28, 27, 26, 24, 23, 21, 29, 25, 22, 54, 34, 20, 14, 13, 11, 53, 19, 15,
+12, 33, 10, 5, 52, 18, 9, 6, 32, 4, 31, 51, 17, 8, 1, 3, 30, 50, 16, 7, 0, 2]
 
 def mapping(indexes, permutation):
     """
@@ -53,10 +57,15 @@ def mapping(indexes, permutation):
     return output
 
 def build_mats(indexes):
+    """
+    indexes : list of (i, j) indexes where the value is non-null
+    output : two matrices, a block-d and the original one, with value 5
+    where indexes point.
+    """
     blockd = np.zeros((56, 56))
     ori_built = np.zeros((56, 56))
     mapp = mapping(indexes, perm)
-    for i,j in indexes:
+    for i, j in indexes:
         blockd[i][j] = 5
     for i,j in mapp:
         ori_built[i][j] = 5
@@ -78,20 +87,27 @@ def plotting(indexes):
     ax2.title.set_text('Reconstructed original matrix')
     fig.colorbar(im1, ax = ax1)
     fig.colorbar(im2, ax = ax2)
-    plt.show()
-    
-def CreationMatrixСoncordance(power):
+    # plt.show()
+
+print("Checking it with matplotlib")
+plotting(fam1)
+print("---------------------------------------------------------------")
+
+POSITIONS = mapping(fam1, perm)
+
+def creation_matrix_concordance(power):
     '''
-    power: int 
+    power: int
 
     This function calculates the product of h*h^T, where h is a vector of all
     monomials of dimension 6 and degree power
     '''
-    size = int(comb(7 + power, power))
-    Monomials = CreationMonomialVectors(power, 1)
-    return [[tuple(Monomials[i][k]+Monomials[j][k] for k in range(6)) for i in range(size)] for j in range(size)] 
+    size = int(comb(7 + power, 2 + power))
+    monoms = creation_monomial_vectors(2 + power, 1)
+    return [[tuple(monoms[i][k]+monoms[j][k] for k in range(6)) for i in range(size)]
+     for j in range(size)]
 
-def TupleVisualization(monomial):
+def tuple_viz(monomial):
     '''
     monomial: 6-element tuple
 
@@ -101,7 +117,12 @@ def TupleVisualization(monomial):
     '''
     return 'x_'+' x_'.join([str(i+1)+'^'+str(monomial[i]) for i in range(6) if monomial[i] != 0])
 
-
-print("Checking it with matplotlib")
-plotting(fam1)
+print("Checking shape of B")
+print(np.array(creation_matrix_concordance(1)).shape)
+print("---------------------------------------------------------------")
+print("Printing all monomials: ")
+concordance = creation_matrix_concordance(1)
+for row, col in POSITIONS:
+    # print(tuple_viz(concordance[row][col]))
+    pass
 print("---------------------------------------------------------------")
