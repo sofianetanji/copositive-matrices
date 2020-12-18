@@ -16,7 +16,7 @@ import time
 import numpy as np
 import sympy as sp
 from sympy import symbols, Matrix, sin
-# from sympy.solvers.solveset import linsolve
+from sympy.solvers.solveset import linsolve
 from monomials import POSITIONS
 from parrilo import creation_monomial_vectors
 
@@ -80,11 +80,13 @@ def set_constraints(bigroot):
     # Build constraints
     constraints = []
     for i in range(56):
-        kernel = 0
+        kernel, symmetric = 0, 0
         for j in range(56):
             if (i, j) in POSITIONS:
                 kernel += c_symbols[i][j] * sum(bigroot[j])
+                symmetric += c_symbols[i][j] - c_symbols[j][i]
         constraints.append(kernel)
+        constraints.append(symmetric)
 
     return constraints
 
@@ -97,10 +99,14 @@ print("All constraints on C for one root, families 13.1 and 13.2")
 for cons in cstrnts:
     print(cons)
 print("---------------------------------------------------------------")
+print(len(cstrnts))
+print(len(POSITIONS))
 # Start timer
 temps = time.time()
 # Solve system : using the current constraints take too much time ( > 6 hours, did not complete)
 # We need to make pre-processing
-# linsolve(cstrnts, tuple(csymbs))
+solution = linsolve(cstrnts, tuple(csymbs))
 elapsed = time.time() - temps
 print("Time for solving the full system: %.5f sec" % elapsed)
+print("---------------------------------------------------------------")
+print(solution)
