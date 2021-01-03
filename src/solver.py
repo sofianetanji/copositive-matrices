@@ -19,7 +19,8 @@ from parrilo import creation_matrix_m, creation_parrilo_polynomial
 from randomgen import random_initialization
 
 def define_problem(a_value, r_value):
-    """Define the SDP problem using CVXPY
+    """
+    Define the SDP problem using CVXPY
     """
     # Define constants
     dim_c = int(comb(7 + r_value, 2 + r_value))
