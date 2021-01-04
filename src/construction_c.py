@@ -16,7 +16,7 @@ import time
 import numpy as np
 import sympy as sp
 from sympy import symbols, Matrix, sin
-from sympy.solvers.solveset import linsolve
+from sympy.solvers.solveset import nonlinsolve
 from monomials import FAMILY
 from parrilo import creation_monomial_vectors
 
@@ -36,7 +36,7 @@ def build_empty_c():
     """
     build empty matrix C with symbols
     """
-    matrix = np.empty((56, 56), dtype=sp.core.symbol.Symbol)
+    matrix = np.empty((56, 56), dtype=sp.symbol.Symbol)
     for i, j in FAMILY:
         sym = symbols('c_{}_{}'.format(i, j))
         matrix[i][j]= sym
@@ -64,7 +64,10 @@ def build_bigroot(root):
     monomials = creation_monomial_vectors(3, 1)
     bigroot = []
     for i in range(56):
-        bigroot.append(tuple(l * r for l, r in zip(monomials[i], root)))
+        monomial = 1
+        for l, r in zip(monomials[i], root):
+            monomial = monomial*r**l
+        bigroot.append(monomial)
     return bigroot
 
 def set_constraints_byblock(bigroot, n_block):
@@ -80,7 +83,7 @@ def set_constraints_byblock(bigroot, n_block):
         kernel = 0
         for k in range(slices[n_block], slices[n_block + 1]):
             if (j, k) in FAMILY:
-                kernel += c_symbols[j][k] * sum(bigroot[k])
+                kernel += c_symbols[j][k] * bigroot[k]
                 # constraints.append(c_symbols[j][k] - c_symbols[k][j])
         constraints.append(kernel)
     return constraints
@@ -99,7 +102,7 @@ def solving(n_block):
     print("Number of variables for block {}: ".format(n_block), len(build_csymbs(n_block)))
     temps = time.time()
     csymbs = build_csymbs(n_block)
-    solution = linsolve(cstrnts, tuple(csymbs))
+    solution = nonlinsolve(cstrnts, phi1, phi2, phi3, phi4, phi5, phi6)
     elapsed = time.time() - temps
     print("Time for solving the system: %.5f sec" % elapsed)
     print("solution: ", solution)
