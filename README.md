@@ -20,7 +20,7 @@
 - [X] November : implement the SDP;
 - [X] December : make the code share-able and re-usable;
 - [X] December : Start the first sections of the report;
-- [X] December - January : sketch a proof;
+- [X] December - January : sketch an analytical proof;
 - [ ] December - January : finalize the proof;
 - [ ] End of January : Finalize the project (code + report + slides).
 
