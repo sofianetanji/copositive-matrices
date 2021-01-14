@@ -15,10 +15,10 @@ http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf fro
 import time
 import numpy as np
 import sympy as sp
-from sympy import symbols, Matrix, sin
-from sympy.solvers.solveset import nonlinsolve
+from sympy import symbols, Matrix, sin, cos
+from sympy.solvers.solveset import linsolve
 from monomials import FAMILY
-from parrilo import creation_monomial_vectors
+from parrilo import creation_monomial_vectors, creation_matrix_m, creation_parrilo_polynomial
 
 phi1, phi2, phi3, phi4, phi5, phi6, phi7 = symbols('phi1 phi2 phi3 phi4 phi5 phi6 phi7')
 slices = [0, 10, 16, 22, 28, 31, 37, 38, 44, 50, 56]
@@ -32,11 +32,20 @@ Matrix([[sin(phi5), 0, 0, 0, sin(phi6), sin(phi5 + phi6)]]),
 Matrix([[sin(phi1 + phi6), sin(phi6), 0, 0, 0, sin(phi1)]])
 ]
 
+# family 13.1 A matrix
+matrix_131 = Matrix(
+[[1, - cos(phi1), cos(phi1 + phi2), - cos(phi1 + phi2 + phi3), cos(phi5 + phi6), - cos(phi6)],
+[- cos(phi1), 1, - cos(phi2), cos(phi2 + phi3), - cos(phi2 + phi3 + phi4), cos(phi1 + phi6)],
+[cos(phi1 + phi2), - cos(phi2), 1, - cos(phi3), cos(phi3 + phi4), - cos(phi3 + phi4 + phi5)],
+[- cos(phi1 + phi2 + phi3), cos(phi2 + phi3), - cos(phi3), 1, - cos(phi4), cos(phi4 + phi5)],
+[cos(phi5 + phi6), - cos(phi2 + phi3 + phi4), cos(phi3 + phi4), - cos(phi4), 1, - cos(phi5)],
+[- cos(phi6), cos(phi1 + phi6), - cos(phi3 + phi4 + phi5), cos(phi4 + phi5), - cos(phi5), 1]])
+
 def build_empty_c():
     """
     build empty matrix C with symbols
     """
-    matrix = np.empty((56, 56), dtype=sp.symbol.Symbol)
+    matrix = np.empty((56, 56), dtype=sp.core.symbol.Symbol)
     for i, j in FAMILY:
         sym = symbols('c_{}_{}'.format(i, j))
         matrix[i][j]= sym
@@ -64,10 +73,7 @@ def build_bigroot(root):
     monomials = creation_monomial_vectors(3, 1)
     bigroot = []
     for i in range(56):
-        monomial = 1
-        for l, r in zip(monomials[i], root):
-            monomial = monomial*r**l
-        bigroot.append(monomial)
+        bigroot.append(tuple(l * r for l, r in zip(monomials[i], root)))
     return bigroot
 
 def set_constraints_byblock(bigroot, n_block):
@@ -83,10 +89,20 @@ def set_constraints_byblock(bigroot, n_block):
         kernel = 0
         for k in range(slices[n_block], slices[n_block + 1]):
             if (j, k) in FAMILY:
-                kernel += c_symbols[j][k] * bigroot[k]
+                kernel += c_symbols[j][k] * sum(bigroot[k])
                 # constraints.append(c_symbols[j][k] - c_symbols[k][j])
         constraints.append(kernel)
     return constraints
+
+def additional_constraints(matrix_a, r_value = 1):
+    """
+    To enforce C =/= 0, we add all the constraints we already used in the solver part
+    """
+    matrix_c = build_empty_c()
+    matrix_m = np.array(creation_matrix_m(2+r_value))
+    lefthandside = np.array(creation_parrilo_polynomial(matrix_a, r_value))
+    righthandside = matrix_c.flatten() @ matrix_m.T
+    return [i == j for i,j in zip(righthandside,lefthandside)]
 
 def solving(n_block):
     """
@@ -98,18 +114,19 @@ def solving(n_block):
         constrnt = [i for i in constrnt if i != 0]
         if constrnt != []:
             cstrnts += constrnt
+        # cstrnts.append(additional_constraints(matrix_131))
     print("Number of constraints obtained for block {}: ".format(n_block), len(cstrnts))
     print("Number of variables for block {}: ".format(n_block), len(build_csymbs(n_block)))
     temps = time.time()
     csymbs = build_csymbs(n_block)
-    solution = nonlinsolve(cstrnts, phi1, phi2, phi3, phi4, phi5, phi6)
+    solution = linsolve(cstrnts, tuple(csymbs))
     elapsed = time.time() - temps
     print("Time for solving the system: %.5f sec" % elapsed)
     print("solution: ", solution)
     # print("Vars: ", csymbs)
     print("---------------------------------------------------------------")
     return solution
-solving(3)
+solving(0)
 print("Number of variables to find: ", sum([len(build_csymbs(i)) for i in range(10)]))
 # Solve system : using the current constraints take too much time ( > 6 hours, did not complete)
 # > 6 hours when we dont use symmetry.
