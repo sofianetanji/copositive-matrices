@@ -45,7 +45,7 @@ def build_empty_c():
     """
     build empty matrix C with symbols
     """
-    matrix = np.empty((56, 56), dtype=sp.core.symbol.Symbol)
+    matrix = np.empty((56, 56), dtype=sp.symbol.Symbol)
     for i, j in FAMILY:
         sym = symbols('c_{}_{}'.format(i, j))
         matrix[i][j]= sym
@@ -94,16 +94,40 @@ def set_constraints_byblock(bigroot, n_block):
         constraints.append(kernel)
     return constraints
 
-def additional_constraints(matrix_a, r_value = 1):
+
+# MODIFIED
+def additional_constraints(matrix_a, n_block, r_value = 1):
     """
     To enforce C =/= 0, we add all the constraints we already used in the solver part
     """
     matrix_c = build_empty_c()
+    # We convert the None entries to zeros, right?
+    for i in range(matrix_c.shape[0]):
+        for j in range(matrix_c.shape[1]):
+            if matrix_c[i][j] is None:
+                matrix_c[i][j] = 0
+            
     matrix_m = np.array(creation_matrix_m(2+r_value))
+    shape = (matrix_m.shape[0], (slices[n_block + 1] - slices[n_block])**2)
+    # We restrict the elements of M to the entries relating to the elements of the nth block of C
+    matrix_m_n_block = np.empty(shape)
+    k = 0
+    for i in range(slices[n_block], slices[n_block + 1]):
+        for j in range(slices[n_block], slices[n_block + 1]): 
+            matrix_m_n_block[:, k] =  matrix_m[:, i*matrix_c.shape[1] + j]
+            k = k + 1
+        
+    # We restrict the elements of C to those of the nth block
+    matrix_c = matrix_c[slices[n_block]:slices[n_block + 1], slices[n_block]:slices[n_block + 1]]
+    
     lefthandside = np.array(creation_parrilo_polynomial(matrix_a, r_value))
-    righthandside = matrix_c.flatten() @ matrix_m.T
-    return [i == j for i,j in zip(righthandside,lefthandside)]
+    # np.matmul complaind about safety and refused to work, changed it to np.dot
+    #righthandside = np.matmul(matrix_c.flatten(), matrix_m_n_block.T)
+    righthandside = np.dot(matrix_c.flatten(), matrix_m_n_block.T)
+    # expressions equal 0
+    return [i - j for i,j in zip(righthandside,lefthandside)]
 
+# MODIFIED
 def solving(n_block):
     """
     Final solver
@@ -114,16 +138,24 @@ def solving(n_block):
         constrnt = [i for i in constrnt if i != 0]
         if constrnt != []:
             cstrnts += constrnt
-        # cstrnts.append(additional_constraints(matrix_131))
+    # We add the constraints relating to the parrilo criterion
+    additional_cstrnts = additional_constraints(matrix_131, n_block)
+    for c in additional_cstrnts:
+        if c != 0:
+            cstrnts.append(c)
+            
     print("Number of constraints obtained for block {}: ".format(n_block), len(cstrnts))
     print("Number of variables for block {}: ".format(n_block), len(build_csymbs(n_block)))
-    temps = time.time()
     csymbs = build_csymbs(n_block)
+    print("Vars: ", csymbs)
+    print("Constraints: ")
+    for c in cstrnts:
+        print(c)
+    temps = time.time()
     solution = linsolve(cstrnts, tuple(csymbs))
     elapsed = time.time() - temps
     print("Time for solving the system: %.5f sec" % elapsed)
     print("solution: ", solution)
-    # print("Vars: ", csymbs)
     print("---------------------------------------------------------------")
     return solution
 solving(0)

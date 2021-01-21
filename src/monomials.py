@@ -2,10 +2,8 @@
 # -*- coding: utf-8; mode: python -*-
 """
 Find the monomials involved in the SOS decomposition
-
 Part of the following project:
 http://www-ljk.imag.fr/membres/Roland.Hildebrand/emo/project_description.pdf from a MSIAM course.
-
 - *Date:* Tuesday, December the 8th, 2020
 - *Author:* Sofiane Tanji, for the MSIAM Master
 - *Licence:* GNU GPL3 Licence
@@ -91,7 +89,6 @@ POSITIONS = mapping(fam1, perm)
 def creation_matrix_concordance(power):
     '''
     power: int
-
     This function calculates the product of h*h^T, where h is a vector of all
     monomials of dimension 6 and degree power
     '''
@@ -103,10 +100,8 @@ def creation_matrix_concordance(power):
 def tuple_viz(monomial):
     '''
     monomial: 6-element tuple
-
     This function converts a tuple (a1,a2,a3,a4,a5,a6,) to a string of the following form:
     x_1^a1 x_2^a2 x_3^a3 x_4^a4 x_5^a5 x_6^a6
-
     '''
     return 'x_'+' x_'.join([str(i+1)+'^'+str(monomial[i]) for i in range(6) if monomial[i] != 0])
 

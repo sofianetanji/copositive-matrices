@@ -54,7 +54,7 @@ def additional_polynomial_creation(r_value):
     return {monom: multinomial_coefficient(r_value, [int(val / 2) for val in monom])
      for monom in creation_monomial_vectors(2 * r_value, 2)}
 
-
+# MODIFIED: Version that works with sympy
 def matrix_polynomial_creation(matrix):
     '''
     matrix : matrix 6×6
@@ -68,9 +68,10 @@ def matrix_polynomial_creation(matrix):
             vector_of_powers = [0 for _ in range(6)]
             vector_of_powers[i] +=2
             vector_of_powers[j] +=2
-            polynomial[tuple(vector_of_powers)] += matrix[i][j]
+            # This is the only modification for construction_c.py
+            #polynomial[tuple(vector_of_powers)] += matrix[i][j]
+            polynomial[tuple(vector_of_powers)] += matrix[i, j]
     return polynomial
-
 
 def multiplication_of_polynomials(polynomial_1, polynomial_2, max_power):
     '''
